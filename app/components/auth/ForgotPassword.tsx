@@ -24,14 +24,14 @@ export default function ForgotPassword({ onBackToLogin }: { onBackToLogin?: () =
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4 text-black">
-      <div className="w-full max-w-md bg-white dark:bg-black rounded-2xl shadow-2xl p-8 border border-border">
+      <div className="w-full max-w-md bg-gray-50 dark:bg-black rounded-2xl shadow-2xl p-8 border border-border">
         <div className="space-y-6 text-black">
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold mb-2">{t("auth.forgotPassword")}</h2>
             <p className="text-muted">{t("auth.forgotPasswordDesc")}</p>
           </div>
           {sent ? (
-            <div className="text-center text-green-600 font-semibold">{t("auth.verificationSent", { email })}</div>
+            <div className="text-center text-green-600 font-semibold">Verification code sent to {email}!</div>
           ) : (
             <>
               <div>
@@ -40,7 +40,7 @@ export default function ForgotPassword({ onBackToLogin }: { onBackToLogin?: () =
                   type="email"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white dark:bg-accent text-black"
+                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-gray-50 dark:bg-accent text-black"
                   placeholder={t("placeholder.email")}
                 />
                 {error && <p className="text-red-400 text-sm mt-1">{error}</p>}

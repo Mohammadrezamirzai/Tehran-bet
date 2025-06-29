@@ -4,15 +4,10 @@ import Image from "next/image";
 import SignupFormSecond from "./SignupFormSecond";
 import { motion } from "framer-motion";
 import { useLanguage } from "../../contexts/LanguageContext";
+import { validateStep1, clearFieldError, type Step1Data, type ValidationMessages } from "../../util/validation";
+import { createValidationMessages, createFieldChangeHandler } from "../../util/form";
 
-interface SignupData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-}
-
-interface FormErrors {
+interface FormErrors extends Record<string, string> {
   firstName?: string;
   lastName?: string;
   email?: string;
@@ -79,7 +74,7 @@ const ProgressBar = ({ currentStep }: { currentStep: number }) => {
 export default function SignupForm({ onShowLogin }: { onShowLogin?: () => void }) {
   const { t } = useLanguage();
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState<SignupData>({
+  const [formData, setFormData] = useState<Step1Data>({
     firstName: "",
     lastName: "",
     email: "",
@@ -87,28 +82,29 @@ export default function SignupForm({ onShowLogin }: { onShowLogin?: () => void }
   });
   const [errors, setErrors] = useState<FormErrors>({});
 
-  const validateStep1 = () => {
-    const newErrors: FormErrors = {};
-    if (!formData.firstName.trim()) newErrors.firstName = t("validation.firstNameRequired");
-    else if (!/^[A-Za-z]{2,}$/.test(formData.firstName.trim())) newErrors.firstName = t("validation.firstNameInvalid");
-    if (!formData.lastName.trim()) newErrors.lastName = t("validation.lastNameRequired");
-    else if (!/^[A-Za-z]{2,}$/.test(formData.lastName.trim())) newErrors.lastName = t("validation.lastNameInvalid");
-    if (!formData.email.trim()) newErrors.email = t("validation.emailRequired");
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = t("validation.emailInvalid");
-    if (!formData.password.trim()) newErrors.password = t("validation.passwordRequired");
-    else if (formData.password.length < 6) newErrors.password = t("validation.passwordLength");
-    else if (!/(?=.*[0-9])/.test(formData.password)) newErrors.password = t("validation.passwordNumber");
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  // Create validation messages object using utility
+  const validationMessages = createValidationMessages(t);
 
-  const handleInputChange = (field: keyof SignupData, value: string) => {
+  const handleInputChange = (field: keyof Step1Data, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    if (errors[field]) setErrors(prev => ({ ...prev, [field]: undefined }));
+    // Clear error for this field when user starts typing
+    if (errors[field]) {
+      setErrors(prev => clearFieldError(prev, field));
+    }
   };
 
   const handleSignup = () => {
-    if (validateStep1()) setStep(2);
+    const validation = validateStep1(formData, validationMessages);
+    setErrors(validation.errors);
+
+    if (validation.isValid) {
+      setStep(2);
+    }
+  };
+
+  const handleSignupComplete = (additionalData: { country: string; privacy: boolean }) => {
+    // This will be called when the second form is submitted successfully
+    console.log("Complete signup data:", { ...formData, ...additionalData });
   };
 
   return (
@@ -119,7 +115,7 @@ export default function SignupForm({ onShowLogin }: { onShowLogin?: () => void }
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}/>
-          <div className="w-screen max-w-xl bg-white dark:bg-black rounded-xl shadow-lg p-8 border border-border">
+          <div className="w-screen max-w-xl bg-gray-50 dark:bg-black rounded-xl shadow-lg p-8 border border-border">
             {/* Progress Bar */}
             <ProgressBar currentStep={step} />
 
@@ -134,7 +130,7 @@ export default function SignupForm({ onShowLogin }: { onShowLogin?: () => void }
                   type="text"
                   value={formData.firstName}
                   onChange={e => handleInputChange("firstName", e.target.value)}
-                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white dark:bg-accent text-black  ${errors.firstName ? "border-red-500" : "border-border"}`}
+                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-gray-50 dark:bg-accent text-black  ${errors.firstName ? "border-red-500" : "border-border"}`}
                   placeholder={t("placeholder.firstName")}
                 />
                 {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
@@ -145,7 +141,7 @@ export default function SignupForm({ onShowLogin }: { onShowLogin?: () => void }
                   type="text"
                   value={formData.lastName}
                   onChange={e => handleInputChange("lastName", e.target.value)}
-                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white dark:bg-accent text-black ${errors.lastName ? "border-red-500" : "border-border"}`}
+                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-gray-50 dark:bg-accent text-black ${errors.lastName ? "border-red-500" : "border-border"}`}
                   placeholder={t("placeholder.lastName")}
                 />
                 {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
@@ -156,7 +152,7 @@ export default function SignupForm({ onShowLogin }: { onShowLogin?: () => void }
                   type="email"
                   value={formData.email}
                   onChange={e => handleInputChange("email", e.target.value)}
-                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white dark:bg-accent text-black  ${errors.email ? "border-red-500" : "border-border"}`}
+                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-gray-50 dark:bg-accent text-black  ${errors.email ? "border-red-500" : "border-border"}`}
                   placeholder={t("placeholder.email")}
                 />
                 {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
@@ -167,7 +163,7 @@ export default function SignupForm({ onShowLogin }: { onShowLogin?: () => void }
                   type="password"
                   value={formData.password}
                   onChange={e => handleInputChange("password", e.target.value)}
-                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white dark:bg-accent text-black  ${errors.password ? "border-red-500" : "border-border"}`}
+                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-gray-50 dark:bg-accent text-black  ${errors.password ? "border-red-500" : "border-border"}`}
                   placeholder={t("placeholder.password")}
                 />
                 {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
@@ -197,7 +193,11 @@ export default function SignupForm({ onShowLogin }: { onShowLogin?: () => void }
           </div>
         </div>
       ) : (
-        <SignupFormSecond />
+        <SignupFormSecond
+          step1Data={formData}
+          onSignupComplete={handleSignupComplete}
+          onBack={() => setStep(1)}
+        />
       )}
     </>
   );

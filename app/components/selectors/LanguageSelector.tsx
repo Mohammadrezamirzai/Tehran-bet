@@ -2,10 +2,9 @@
 import { Fragment, useState, useEffect } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { useLanguage } from "../../contexts/LanguageContext";
+import { Language } from "../../data/translations";
 
-type LanguageOption = { code: string; label: string; flag: string };
-
-const languages: LanguageOption[] = [
+const languages = [
   { code: "en", label: "English", flag: "🇺🇸" },
   { code: "es", label: "Español", flag: "🇪🇸" },
   { code: "fr", label: "Français", flag: "🇫🇷" },
@@ -15,23 +14,23 @@ const languages: LanguageOption[] = [
 
 export default function LanguageSelector() {
   const { language, setLanguage } = useLanguage();
-  const [selected, setSelected] = useState<LanguageOption>(languages[0]);
+  const [selected, setSelected] = useState(languages[0]);
 
   useEffect(() => {
     const found = languages.find((l) => l.code === language);
     if (found) setSelected(found);
   }, [language]);
 
-  const handleChange = (lang: LanguageOption) => {
+  const handleChange = (lang: typeof languages[0]) => {
     setSelected(lang);
-    setLanguage(lang.code);
+    setLanguage(lang.code as Language);
   };
 
   return (
     <div className="w-36">
       <Listbox value={selected} onChange={handleChange}>
         <div className="relative">
-          <Listbox.Button className="relative w-full cursor-pointer rounded-full bg-gray-50 dark:bg-gray-700 py-2 pl-4 pr-10 text-left shadow-lg border-2 border-blue-500 dark:border-primary focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-primary text-base font-semibold text-gray-900 dark:text-white transition-all duration-200">
+          <Listbox.Button className="relative w-full cursor-pointer rounded-full bg-gray-50 dark:bg-gray-700 py-2 pl-4 pr-10 text-left shadow-lg border-2 border-blue-500 dark:border-primary focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-primary text-base font-semibold transition-all duration-200 hover:shadow-xl">
             <span className="flex items-center">
               <span className="mr-2 text-lg">{selected.flag}</span>
               <span>{selected.label}</span>

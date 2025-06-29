@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import Button from "../ui/Button";
-import { useLanguage } from "../../contexts/LanguageContext";
+import Button from "./ui/Button";
+import { useLanguage } from "../contexts/LanguageContext";
 
 interface LoginData {
   email: string;

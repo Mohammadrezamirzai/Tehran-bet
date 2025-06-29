@@ -1,43 +1,40 @@
 "use client";
 import { Fragment, useState, useEffect } from "react";
 import { Listbox, Transition } from "@headlessui/react";
-import { useLanguage } from "../../contexts/LanguageContext";
+import { useLanguage, Currency } from "../../contexts/LanguageContext";
 
-type LanguageOption = { code: string; label: string; flag: string };
-
-const languages: LanguageOption[] = [
-  { code: "en", label: "English", flag: "🇺🇸" },
-  { code: "es", label: "Español", flag: "🇪🇸" },
-  { code: "fr", label: "Français", flag: "🇫🇷" },
-  { code: "de", label: "Deutsch", flag: "🇩🇪" },
-  { code: "fa", label: "فارسی", flag: "🇮🇷" },
+const currencies = [
+  { code: "USD", label: "US Dollar", symbol: "$" },
+  { code: "EUR", label: "Euro", symbol: "€" },
+  { code: "IRR", label: "Iranian Rial", symbol: "ریال" },
+  { code: "GBP", label: "British Pound", symbol: "£" },
 ];
 
-export default function LanguageSelector() {
-  const { language, setLanguage } = useLanguage();
-  const [selected, setSelected] = useState<LanguageOption>(languages[0]);
+export default function CurrencySelector() {
+  const { currency, setCurrency } = useLanguage();
+  const [selected, setSelected] = useState(currencies[0]);
 
   useEffect(() => {
-    const found = languages.find((l) => l.code === language);
+    const found = currencies.find((c) => c.code === currency);
     if (found) setSelected(found);
-  }, [language]);
+  }, [currency]);
 
-  const handleChange = (lang: LanguageOption) => {
-    setSelected(lang);
-    setLanguage(lang.code);
+  const handleChange = (curr: typeof currencies[0]) => {
+    setSelected(curr);
+    setCurrency(curr.code as Currency);
   };
 
   return (
-    <div className="w-36">
+    <div className="w-32">
       <Listbox value={selected} onChange={handleChange}>
         <div className="relative">
-          <Listbox.Button className="relative w-full cursor-pointer rounded-full bg-gray-50 dark:bg-gray-700 py-2 pl-4 pr-10 text-left shadow-lg border-2 border-blue-500 dark:border-primary focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-primary text-base font-semibold text-gray-900 dark:text-white transition-all duration-200">
+          <Listbox.Button className="relative w-full cursor-pointer rounded-full bg-gray-50 dark:bg-gray-700 py-2 pl-4 pr-10 text-left shadow-lg border-2 border-green-500 dark:border-green-400 focus:outline-none focus:ring-2 focus:ring-green-400 dark:focus:ring-green-300 text-base font-semibold text-gray-900 dark:text-white transition-all duration-200 hover:shadow-xl">
             <span className="flex items-center">
-              <span className="mr-2 text-lg">{selected.flag}</span>
-              <span>{selected.label}</span>
+              <span className="mr-2 text-lg">{selected.symbol}</span>
+              <span>{selected.code}</span>
             </span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-              <svg className="h-5 w-5 text-blue-500 dark:text-primary" fill="none" viewBox="0 0 20 20" stroke="currentColor">
+              <svg className="h-5 w-5 text-green-500 dark:text-green-400" fill="none" viewBox="0 0 20 20" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7l3-3 3 3m0 6l-3 3-3-3" />
               </svg>
             </span>
@@ -49,24 +46,24 @@ export default function LanguageSelector() {
             leaveTo="opacity-0"
           >
             <Listbox.Options className="absolute z-10 mt-2 w-full rounded-xl bg-gray-50 dark:bg-gray-800 shadow-2xl ring-1 ring-black/10 dark:ring-white/10 focus:outline-none text-base">
-              {languages.map((lang) => (
+              {currencies.map((curr) => (
                 <Listbox.Option
-                  key={lang.code}
+                  key={curr.code}
                   className={({ active }) =>
                     `relative cursor-pointer select-none py-2 pl-10 pr-4 rounded-lg transition-all duration-150 ${
                       active
-                        ? "bg-blue-100 dark:bg-primary/30 text-blue-900 dark:text-white"
+                        ? "bg-green-100 dark:bg-green-400/30 text-green-900 dark:text-white"
                         : "text-gray-900 dark:text-gray-100"
                     }`
                   }
-                  value={lang}
+                  value={curr}
                 >
                   {({ selected }) => (
                     <>
-                      <span className="absolute left-3 text-lg">{lang.flag}</span>
-                      <span className={`block truncate ${selected ? "font-bold" : "font-normal"}`}>{lang.label}</span>
+                      <span className="absolute left-3 text-lg">{curr.symbol}</span>
+                      <span className={`block truncate ${selected ? "font-bold" : "font-normal"}`}>{curr.label}</span>
                       {selected ? (
-                        <span className="absolute inset-y-0 right-3 flex items-center text-blue-600 dark:text-primary">
+                        <span className="absolute inset-y-0 right-3 flex items-center text-green-600 dark:text-green-400">
                           <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                           </svg>

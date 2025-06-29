@@ -2,8 +2,10 @@
 import { useState, useEffect } from "react";
 import Button from "./Button";
 import { useRouter } from "next/navigation";
-import LanguageSelector from "./LanguageSelector";
+import LanguageSelector from "../selectors/LanguageSelector";
+import CurrencySelector from "../selectors/CurrencySelector";
 import { useLanguage } from "../../contexts/LanguageContext";
+import { SunIcon, MoonIcon } from "./icons";
 
 export default function Navbar({
   onLoginClick,
@@ -46,9 +48,9 @@ export default function Navbar({
   };
 
   return (
-    <nav className="fixed top-0 left-0 mb-16 right-0 z-50 bg-transparent mb-8">
+    <nav className="fixed top-0 left-0 my-10 right-0 z-50 bg-transparent ">
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16">
-        <div className="flex flex-row items-center justify-between h-auto lg:h-20 gap-4 lg:gap-0 py-2 lg:py-0">
+        <div className="flex flex-col md:flex-row items-center justify-between h-auto lg:h-20 gap-4 lg:gap-0 py-2 lg:py-0">
           {/* Modern Logo */}
           <div className="relative group cursor-pointer mb-2 lg:mb-0 select-none">
             <div className="relative">
@@ -56,7 +58,7 @@ export default function Navbar({
               <div className="absolute inset-0 bg-gradient-to-r from-orange-400/20 via-orange-500/30 to-orange-600/20 dark:from-blue-400/20 dark:via-blue-500/30 dark:to-blue-600/20 rounded-xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
 
               {/* Logo container with glassmorphism */}
-              <div className="relative bg-white/10 dark:bg-black/10 backdrop-blur-md border border-white/20 dark:border-gray-700/30 rounded-xl px-4 py-2 group-hover:bg-white/20 dark:group-hover:bg-black/20 transition-all duration-300 shadow-lg group-hover:shadow-xl">
+              <div className="relative bg-gray-50/10 dark:bg-black/10 backdrop-blur-md border border-white/20 dark:border-gray-700/30 rounded-xl px-4 py-2 group-hover:bg-gray-50/20 dark:group-hover:bg-black/20 transition-all duration-300 shadow-lg group-hover:shadow-xl">
                 <div className="flex items-center gap-1">
                   {/* Icon */}
                   <div className="relative">
@@ -91,9 +93,10 @@ export default function Navbar({
 
           {/* Right side buttons */}
           <div className="flex flex-row items-center justify-center gap-2 lg:gap-3 w-full lg:w-auto">
-            {/* Language selector and dark mode toggle */}
+            {/* Language selector, currency selector and dark mode toggle */}
             <div className="relative group flex items-center gap-2">
               <LanguageSelector />
+              <CurrencySelector />
               <button
                 onClick={toggleDarkMode}
                 className={`p-2.5 rounded-full border-2 border-yellow-400 bg-gradient-to-br from-yellow-400 via-orange-400 to-yellow-500 dark:from-blue-900 dark:via-primary dark:to-blue-700 shadow-lg hover:shadow-yellow-400/40 focus:outline-none focus:ring-4 focus:ring-yellow-300/40 transition-all duration-200 relative ${
@@ -101,33 +104,9 @@ export default function Navbar({
                 }`}
                 aria-label="Toggle dark mode">
                 {darkMode ? (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-7 w-7 text-black dark:text-yellow-300 drop-shadow-[0_2px_8px_rgba(249,115,22,0.4)]"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 3v1m0 16v1m8.66-13.66l-.71.71M4.05 19.95l-.71.71M21 12h-1M4 12H3m16.66 5.66l-.71-.71M4.05 4.05l-.71-.71M16 12a4 4 0 11-8 0 4 4 0 018 0z"
-                    />
-                  </svg>
+                  <SunIcon />
                 ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 text-yellow-400 dark:text-white drop-shadow-[0_2px_8px_rgba(249,115,22,0.4)]"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"
-                    />
-                  </svg>
+                  <MoonIcon />
                 )}
               </button>
             </div>

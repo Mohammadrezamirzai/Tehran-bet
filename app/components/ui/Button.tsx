@@ -26,7 +26,7 @@ export default function Button({
   const variants = {
     primary: "bg-gradient-to-r from-orange-600 via-yellow-400 to-yellow-300 text-white hover:from-yellow-500 hover:to-orange-500 shadow-xl hover:shadow-2xl hover:shadow-yellow-400/40 focus:ring-yellow-400 border-0",
     secondary: "bg-gradient-to-r from-secondary to-accent text-foreground hover:from-accent hover:to-secondary focus:ring-accent border border-accent shadow-md hover:shadow-lg",
-    outline: "bg-white/90 border-2 border-blue-500 text-blue-700 hover:bg-blue-50 hover:text-blue-900 focus:ring-blue-400 shadow hover:shadow-lg hover:shadow-blue-300/30 backdrop-blur-md",
+    outline: "bg-gray-50/90 border-2 border-blue-500 text-blue-700 hover:bg-blue-50 hover:text-blue-900 focus:ring-blue-400 shadow hover:shadow-lg hover:shadow-blue-300/30 backdrop-blur-md",
     ghost: "bg-transparent text-foreground hover:bg-accent/50 focus:ring-accent border-0 shadow-none hover:shadow-sm",
   };
 
@@ -71,7 +71,7 @@ export default function Button({
 
       {/* Ripple effect */}
       <motion.div
-        className="absolute inset-0 bg-white/20 rounded-xl scale-0 group-hover:scale-100 transition-transform duration-300"
+        className="absolute inset-0 bg-gray-50/20 rounded-xl scale-0 group-hover:scale-100 transition-transform duration-300"
         initial={{ scale: 0, opacity: 0 }}
         whileHover={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.3 }}
