@@ -1,5 +1,10 @@
 # Tehran Bet - Next.js Casino App
 
+Take about 4 hours
+
+
+![Screenshot (33)](https://github.com/user-attachments/assets/1731498f-4b37-46e6-9046-93a0f954e586)
+
 A modern, responsive casino betting application built with Next.js, TypeScript, and Tailwind CSS.
 
 ## Features
